@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.aws/
+credentials
+*.csv.bak
+
+# áudios gerados localmente (os publicados saem do GitHub Actions)
+saida/

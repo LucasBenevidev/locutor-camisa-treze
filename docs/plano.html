@@ -1,0 +1,558 @@
+<title>Locutor Camisa Treze</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#F2F4F8;
+    --surface:#FFFFFF;
+    --surface-sunken:#E8ECF3;
+    --ink:#16233F;
+    --ink-soft:#4A5773;
+    --ink-faint:#7A87A3;
+    --line:#D8DEE9;
+    --accent:#C9932E;
+    --accent-deep:#8B6116;
+    --accent-tint:#F6EBD3;
+    --good:#2F7A4D;
+    --good-tint:#E4F1E9;
+    --warn:#B5541D;
+    --warn-tint:#F7E6DA;
+    --info:#2C5C8F;
+    --info-tint:#E1EBF5;
+    --shadow: 0 1px 2px rgba(22,35,63,0.06), 0 6px 20px rgba(22,35,63,0.06);
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "Source Sans 3", "Segoe UI", Arial, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "Courier New", monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0F1626;
+      --surface:#172038;
+      --surface-sunken:#111A2E;
+      --ink:#E7ECF5;
+      --ink-soft:#A9B4C9;
+      --ink-faint:#7C88A5;
+      --line:#2A3556;
+      --accent:#E3B854;
+      --accent-deep:#F4CE7A;
+      --accent-tint:#332A15;
+      --good:#5FBF85;
+      --good-tint:#173323;
+      --warn:#E08A54;
+      --warn-tint:#3A2418;
+      --info:#7FB0E8;
+      --info-tint:#182B42;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0F1626;
+    --surface:#172038;
+    --surface-sunken:#111A2E;
+    --ink:#E7ECF5;
+    --ink-soft:#A9B4C9;
+    --ink-faint:#7C88A5;
+    --line:#2A3556;
+    --accent:#E3B854;
+    --accent-deep:#F4CE7A;
+    --accent-tint:#332A15;
+    --good:#5FBF85;
+    --good-tint:#173323;
+    --warn:#E08A54;
+    --warn-tint:#3A2418;
+    --info:#7FB0E8;
+    --info-tint:#182B42;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.6;
+  }
+  .page{
+    max-width:800px;
+    margin:0 auto;
+    padding:56px 24px 96px;
+  }
+  h1,h2,h3{
+    font-family:var(--font-display);
+    color:var(--ink);
+    text-wrap:balance;
+    margin:0;
+  }
+  p{margin:0 0 0.9em; max-width:68ch;}
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    letter-spacing:0.09em;
+    text-transform:uppercase;
+    color:var(--accent-deep);
+    font-weight:600;
+    margin:0 0 10px;
+  }
+
+  /* Hero */
+  header.hero{
+    padding-bottom:36px;
+    margin-bottom:40px;
+    border-bottom:1px solid var(--line);
+  }
+  header.hero h1{
+    font-size:clamp(2.1rem, 4vw, 2.7rem);
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  header.hero .subtitle{
+    margin-top:14px;
+    font-size:1.08rem;
+    color:var(--ink-soft);
+    max-width:62ch;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 28px;
+    margin-top:22px;
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--ink-faint);
+  }
+  .meta-row span b{color:var(--ink-soft); font-weight:600;}
+
+  section{margin-bottom:56px;}
+  section > h2{
+    font-size:1.5rem;
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  section > .section-intro{
+    color:var(--ink-soft);
+    margin-bottom:22px;
+  }
+
+  /* Diagram */
+  figure.diagram{
+    margin:0;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:20px 16px 14px;
+    box-shadow:var(--shadow);
+  }
+  figure.diagram .svg-wrap{overflow-x:auto;}
+  figure.diagram svg{display:block; min-width:640px; width:100%; height:auto; color:var(--ink);}
+  figcaption{
+    margin-top:14px;
+    font-size:13.5px;
+    color:var(--ink-faint);
+    border-top:1px solid var(--line);
+    padding-top:12px;
+  }
+
+  /* Component cards */
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(228px, 1fr));
+    gap:16px;
+  }
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:18px 18px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .card .num{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--accent-deep);
+    font-weight:600;
+  }
+  .card h3{font-size:1.05rem; font-weight:600;}
+  .card p{font-size:14.5px; color:var(--ink-soft); margin-bottom:4px;}
+  .tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:auto; padding-top:6px;}
+  .tag{
+    font-family:var(--font-mono);
+    font-size:11px;
+    background:var(--surface-sunken);
+    color:var(--ink-soft);
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:3px 7px;
+  }
+
+  /* Flow steps */
+  ol.flow{
+    list-style:none;
+    margin:0; padding:0;
+    counter-reset:flow;
+    display:flex;
+    flex-direction:column;
+  }
+  ol.flow li{
+    counter-increment:flow;
+    display:grid;
+    grid-template-columns:36px 1fr;
+    gap:16px;
+    padding:14px 0;
+    border-top:1px solid var(--line);
+  }
+  ol.flow li:first-child{border-top:none;}
+  ol.flow li::before{
+    content:counter(flow);
+    font-family:var(--font-mono);
+    font-weight:600;
+    font-size:14px;
+    color:var(--accent-deep);
+    background:var(--accent-tint);
+    width:30px; height:30px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+  }
+  ol.flow p{margin:0; color:var(--ink-soft); font-size:14.5px;}
+  ol.flow strong{color:var(--ink); font-weight:600;}
+
+  .chips-demo{display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;}
+  .chip{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    font-weight:600;
+    padding:4px 10px;
+    border-radius:999px;
+  }
+  .chip.pendente{background:var(--warn-tint); color:var(--warn);}
+  .chip.aprovado{background:var(--good-tint); color:var(--good);}
+  .chip.publicado{background:var(--info-tint); color:var(--info);}
+
+  /* Tables */
+  .table-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:10px;}
+  table{width:100%; border-collapse:collapse; background:var(--surface); font-size:14.5px;}
+  th,td{text-align:left; padding:11px 14px; border-bottom:1px solid var(--line); vertical-align:top;}
+  thead th{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--ink-faint);
+    background:var(--surface-sunken);
+    font-weight:600;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  td.num, th.num{font-family:var(--font-mono); font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap;}
+  .table-note{font-size:12.5px; color:var(--ink-faint); margin-top:10px;}
+
+  /* Decisions */
+  .decisions{display:flex; flex-direction:column; gap:2px;}
+  .decision{
+    border-left:3px solid var(--accent);
+    background:var(--surface);
+    border-radius:0 8px 8px 0;
+    padding:14px 18px;
+    margin-bottom:10px;
+  }
+  .decision .q{font-weight:600; margin-bottom:4px;}
+  .decision .a{color:var(--ink-soft); font-size:14.5px; margin:0;}
+  .decision .a b{color:var(--ink); font-weight:600;}
+
+  /* Checklist */
+  ul.checklist{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px;}
+  ul.checklist li{
+    display:flex; align-items:flex-start; gap:12px;
+    padding:12px 4px;
+    border-top:1px solid var(--line);
+  }
+  ul.checklist li:first-child{border-top:none;}
+  ul.checklist input[type="checkbox"]{
+    appearance:none;
+    width:19px; height:19px;
+    min-width:19px;
+    margin-top:2px;
+    border:1.5px solid var(--ink-faint);
+    border-radius:5px;
+    cursor:pointer;
+    position:relative;
+    background:var(--surface);
+  }
+  ul.checklist input[type="checkbox"]:checked{
+    background:var(--good);
+    border-color:var(--good);
+  }
+  ul.checklist input[type="checkbox"]:checked::after{
+    content:"";
+    position:absolute; left:5px; top:1px;
+    width:5px; height:10px;
+    border:solid white;
+    border-width:0 2px 2px 0;
+    transform:rotate(45deg);
+  }
+  ul.checklist input[type="checkbox"]:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  ul.checklist label{font-size:14.5px; color:var(--ink-soft); cursor:pointer;}
+  ul.checklist li.done label{color:var(--ink-faint); text-decoration:line-through;}
+
+  footer{
+    border-top:1px solid var(--line);
+    margin-top:64px;
+    padding-top:20px;
+    font-size:12.5px;
+    color:var(--ink-faint);
+  }
+
+  @media (prefers-reduced-motion: no-preference){
+    section{animation:fade-up 0.5s ease-out both;}
+  }
+  @keyframes fade-up{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+</style>
+
+<div class="page">
+
+  <header class="hero">
+    <p class="eyebrow">Plano de projeto</p>
+    <h1>Locutor Camisa Treze</h1>
+    <p class="subtitle">Sistema de locução automática para a casa lotérica em Brasília: texto de propaganda escrito por IA, sempre revisado por humano, narrado pela Amazon Polly e tocado numa caixa de som Bluetooth dentro da loja.</p>
+    <div class="meta-row">
+      <span><b>Loja:</b> Loteria Camisa Treze — Brasília</span>
+      <span><b>Hardware da loja:</b> PC Windows, 8 GB RAM</span>
+      <span><b>Distribuição:</b> GitHub Pages (grátis)</span>
+    </div>
+  </header>
+
+  <section id="visao-geral">
+    <h2>Visão geral</h2>
+    <p>A ideia nasceu de uma propaganda que seu pai recebeu: um produto pronto para casas lotéricas que toca, numa caixa Bluetooth, áudios gerados por IA anunciando os próximos sorteios e bolões. Em vez de assinar esse produto, a proposta aqui é construir uma versão própria — mais barata e sob controle da família.</p>
+    <p>O princípio central é o mesmo que seu pai pediu: <strong>nenhum áudio vai ao ar sem passar por revisão humana</strong>. A IA só rascunha o texto a partir de dados reais — sorteio, valor da cota, prêmio, prazo do bolão — digitados por quem conhece o negócio.</p>
+  </section>
+
+  <section id="arquitetura">
+    <h2>Arquitetura</h2>
+    <p class="section-intro">Todo o trabalho de IA e de conversão de texto em voz roda de graça no GitHub Actions, e o próprio GitHub Pages publica os áudios prontos. A loja só baixa o resultado e toca — e como tudo vive na nuvem, a planilha pode ser atualizada de qualquer lugar, não só do notebook da lotérica.</p>
+    <figure class="diagram">
+      <div class="svg-wrap">
+        <svg viewBox="0 0 1030 340" role="img" aria-label="Diagrama do fluxo: dados digitados numa planilha alimentam uma rotina de geração de texto por IA no GitHub Actions; o texto passa por revisão humana antes de ser enviado à Amazon Polly, que gera o áudio; o áudio é publicado no GitHub Pages e, por fim, baixado e tocado pelo computador da loja numa caixa de som Bluetooth em Brasília.">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <!-- group: cloud -->
+          <rect x="190" y="90" width="490" height="200" rx="10" fill="none" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.5" stroke-dasharray="5 5"/>
+          <text x="435" y="76" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity="0.65">GITHUB ACTIONS — NUVEM, GRÁTIS</text>
+
+          <!-- group: loja -->
+          <rect x="860" y="90" width="150" height="200" rx="10" fill="none" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.5" stroke-dasharray="5 5"/>
+          <text x="935" y="76" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity="0.65">LOJA — BRASÍLIA</text>
+
+          <!-- n1 planilha -->
+          <rect x="20" y="160" width="130" height="60" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+          <text x="85" y="185" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="13" font-weight="600" fill="currentColor">Planilha</text>
+          <text x="85" y="202" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="11.5" fill="currentColor" fill-opacity="0.65">jogos e bolões</text>
+
+          <!-- n2 redator IA -->
+          <rect x="205" y="160" width="130" height="60" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+          <text x="270" y="185" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="13" font-weight="600" fill="currentColor">Redator IA</text>
+          <text x="270" y="202" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="11.5" fill="currentColor" fill-opacity="0.65">gera rascunho</text>
+
+          <!-- n3 revisão humana (highlight) -->
+          <rect x="370" y="158" width="130" height="64" rx="8" fill="var(--accent-tint)" stroke="var(--accent)" stroke-width="2"/>
+          <text x="435" y="184" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="13" font-weight="700" fill="var(--accent-deep)">Revisão humana</text>
+          <text x="435" y="202" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="11.5" fill="var(--accent-deep)" fill-opacity="0.85">aprova na planilha</text>
+
+          <!-- n4 Polly -->
+          <rect x="535" y="160" width="130" height="60" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+          <text x="600" y="185" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="13" font-weight="600" fill="currentColor">Amazon Polly</text>
+          <text x="600" y="202" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="11.5" fill="currentColor" fill-opacity="0.65">texto → áudio .mp3</text>
+
+          <!-- n5 github pages -->
+          <rect x="710" y="160" width="130" height="60" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+          <text x="775" y="185" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="13" font-weight="600" fill="currentColor">GitHub Pages</text>
+          <text x="775" y="202" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="11.5" fill="currentColor" fill-opacity="0.65">áudios + lista</text>
+
+          <!-- n6 player loja -->
+          <rect x="872" y="160" width="126" height="60" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+          <text x="935" y="181" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="12.5" font-weight="600" fill="currentColor">PC + caixa</text>
+          <text x="935" y="196" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="12.5" font-weight="600" fill="currentColor">Bluetooth</text>
+          <text x="935" y="212" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="10.5" fill="currentColor" fill-opacity="0.6">baixa e toca</text>
+
+          <!-- arrows -->
+          <line x1="150" y1="190" x2="203" y2="190" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <line x1="335" y1="190" x2="368" y2="190" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <line x1="500" y1="190" x2="533" y2="190" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <line x1="665" y1="190" x2="708" y2="190" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <line x1="840" y1="190" x2="870" y2="190" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+          <!-- arrow labels -->
+          <text x="176" y="243" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="currentColor" fill-opacity="0.6">1 · digita dados</text>
+          <text x="351" y="243" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="currentColor" fill-opacity="0.6">2 · rascunho pronto</text>
+          <text x="516" y="243" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="currentColor" fill-opacity="0.6">3 · aprovado</text>
+          <text x="686" y="243" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="currentColor" fill-opacity="0.6">4 · publica</text>
+          <text x="856" y="243" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="currentColor" fill-opacity="0.6">5 · baixa</text>
+        </svg>
+      </div>
+      <figcaption>Os dados nascem numa planilha, viram texto e depois áudio dentro do GitHub Actions (grátis, roda na nuvem) — com um humano aprovando no meio do caminho — e só então chegam prontos ao computador da loja, que apenas baixa e toca.</figcaption>
+    </figure>
+  </section>
+
+  <section id="componentes">
+    <h2>Componentes</h2>
+    <div class="cards">
+      <div class="card">
+        <span class="num">01</span>
+        <h3>Planilha de jogos e bolões</h3>
+        <p>Onde os dados nascem. Uma linha por sorteio ou bolão: loteria (Mega-Sena, Lotofácil, Quina...), data do sorteio, valor da cota, prêmio estimado, prazo.</p>
+        <div class="tags"><span class="tag">Google Sheets</span><span class="tag">Sheets API</span></div>
+      </div>
+      <div class="card">
+        <span class="num">02</span>
+        <h3>Redator IA</h3>
+        <p>Lê as linhas novas da planilha e escreve um rascunho de locução curto, no tom de propaganda de casa lotérica.</p>
+        <div class="tags"><span class="tag">GitHub Actions</span><span class="tag">Claude (Haiku)</span></div>
+      </div>
+      <div class="card">
+        <span class="num">03</span>
+        <h3>Revisão humana</h3>
+        <p>A própria planilha é o painel de aprovação: uma coluna de texto editável e um status controlam o que pode virar áudio.</p>
+        <div class="tags"><span class="tag">Google Sheets</span><span class="tag">controle manual</span></div>
+      </div>
+      <div class="card">
+        <span class="num">04</span>
+        <h3>Locutor digital</h3>
+        <p>Converte o texto aprovado num arquivo .mp3, com voz neural em português do Brasil.</p>
+        <div class="tags"><span class="tag">Amazon Polly</span><span class="tag">voz neural pt-BR</span></div>
+      </div>
+      <div class="card">
+        <span class="num">05</span>
+        <h3>Distribuição</h3>
+        <p>Os áudios prontos e uma lista do que está no ar são publicados pelo próprio workflow num site estático gratuito, acessível por HTTPS.</p>
+        <div class="tags"><span class="tag">GitHub Pages</span><span class="tag">HTTPS</span></div>
+      </div>
+      <div class="card">
+        <span class="num">06</span>
+        <h3>Player da loja</h3>
+        <p>Baixa os áudios novos, remove os que já venceram (bolão já sorteado) e toca um por vez na caixa Bluetooth em horário comercial.</p>
+        <div class="tags"><span class="tag">Python</span><span class="tag">Agendador de Tarefas</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="fluxo">
+    <h2>Fluxo passo a passo</h2>
+    <ol class="flow">
+      <li><p><strong>Alguém digita os dados</strong> do sorteio ou bolão na planilha — loteria, data, valor, prêmio, prazo.</p></li>
+      <li><p><strong>Uma rotina agendada no GitHub Actions</strong> lê as linhas novas e pede à IA um rascunho de locução.</p></li>
+      <li>
+        <p><strong>O rascunho volta para a planilha</strong> para revisão. Alguém edita se precisar e muda o status.</p>
+        <div class="chips-demo">
+          <span class="chip pendente">Pendente</span>
+          <span class="chip aprovado">Aprovado</span>
+          <span class="chip publicado">Publicado</span>
+        </div>
+      </li>
+      <li><p><strong>Uma segunda rotina detecta as linhas aprovadas</strong> e envia o texto à Amazon Polly, que devolve o áudio.</p></li>
+      <li><p><strong>O áudio e a lista atualizada</strong> de conteúdos ativos são publicados no GitHub Pages.</p></li>
+      <li><p><strong>O computador da loja verifica essa lista</strong> periodicamente, baixa o que é novo, apaga o que venceu e toca os áudios na caixa Bluetooth durante o funcionamento da loja.</p></li>
+    </ol>
+  </section>
+
+  <section id="cronograma">
+    <h2>Cronograma em fases</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Fase</th><th>Objetivo</th><th>Duração</th></tr></thead>
+        <tbody>
+          <tr><td><strong>0 — Preparação</strong></td><td>Criar conta AWS, ativar o Amazon Polly, montar a planilha modelo, providenciar a caixa Bluetooth.</td><td class="num">1 semana</td></tr>
+          <tr><td><strong>1 — MVP manual</strong></td><td>Script único, disparado à mão: lê a planilha, gera texto, sintetiza e salva o áudio para ajustar o tom antes de automatizar.</td><td class="num">1–2 semanas</td></tr>
+          <tr><td><strong>2 — Automação na nuvem</strong></td><td>Workflows agendados no GitHub Actions, com publicação automática no GitHub Pages.</td><td class="num">1–2 semanas</td></tr>
+          <tr><td><strong>3 — Player da loja</strong></td><td>Script no PC Windows com Agendador de Tarefas, regras de horário e não repetição, testado ao vivo.</td><td class="num">1 semana</td></tr>
+          <tr><td><strong>4 — Ajuste fino</strong></td><td>Expiração automática por data de sorteio, variedade de vozes, volume, relatório do que tocou.</td><td class="num">contínuo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="custos">
+    <h2>Custos estimados</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Uso estimado</th><th class="num">Custo estimado</th></tr></thead>
+        <tbody>
+          <tr><td>Amazon Polly (voz neural)</td><td>~20 mil caracteres/mês (25–30 áudios)</td><td class="num">Grátis no 1º ano; depois ~US$ 0,30/mês</td></tr>
+          <tr><td>Geração de texto (Claude Haiku)</td><td>~30 textos curtos/mês</td><td class="num">&lt; US$ 1/mês</td></tr>
+          <tr><td>GitHub Actions e Pages</td><td>Repositório público, poucos MB de áudio</td><td class="num">Grátis</td></tr>
+          <tr><td>Computador da loja</td><td>Já existente</td><td class="num">Sem custo adicional</td></tr>
+          <tr><td>Caixa de som Bluetooth</td><td>1 unidade, se ainda não tiver</td><td class="num">~R$ 150–400</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">Preços da AWS e da Anthropic mudam com o tempo — confirme nos respectivos consoles antes de comprometer orçamento.</p>
+  </section>
+
+  <section id="decisoes">
+    <h2>Decisões em aberto</h2>
+    <div class="decisions">
+      <div class="decision">
+        <p class="q">Qual serviço vai gerar o texto?</p>
+        <p class="a"><b>Sugestão:</b> API da Anthropic (Claude Haiku) — custo baixíssimo para textos curtos, mas exige criar uma chave de API própria.</p>
+      </div>
+      <div class="decision">
+        <p class="q">Qual voz da Polly usar?</p>
+        <p class="a"><b>Sugestão:</b> testar as vozes neurais em português do Brasil e deixar seu pai escolher pelo ouvido.</p>
+      </div>
+      <div class="decision">
+        <p class="q">Em que horário e com que frequência os áudios devem tocar?</p>
+        <p class="a">Depende do fluxo de clientes na loja — defina uma janela (ex.: 8h–18h) e um intervalo mínimo entre áudios.</p>
+      </div>
+      <div class="decision">
+        <p class="q">Quem mantém a conta AWS e a chave de API?</p>
+        <p class="a">Provavelmente você — envolve cartão de crédito e faturas que seu pai não deve precisar gerenciar.</p>
+      </div>
+      <div class="decision">
+        <p class="q">E se a internet da loja cair?</p>
+        <p class="a"><b>Sugestão:</b> o player sempre toca a partir da pasta local; internet só é necessária para buscar áudios novos.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="proximos-passos">
+    <h2>Próximos passos imediatos</h2>
+    <ul class="checklist" id="checklist">
+      <li data-id="aws"><input type="checkbox" id="chk-aws"><label for="chk-aws">Criar conta AWS e ativar o Amazon Polly (região São Paulo)</label></li>
+      <li data-id="sheet"><input type="checkbox" id="chk-sheet"><label for="chk-sheet">Criar a planilha modelo com as colunas combinadas</label></li>
+      <li data-id="repo"><input type="checkbox" id="chk-repo"><label for="chk-repo">Criar o repositório público no GitHub</label></li>
+      <li data-id="mvp"><input type="checkbox" id="chk-mvp"><label for="chk-mvp">Escrever o primeiro script manual (Fase 1) e gerar um áudio de teste</label></li>
+      <li data-id="ouvir"><input type="checkbox" id="chk-ouvir"><label for="chk-ouvir">Ouvir o resultado com seu pai antes de automatizar</label></li>
+      <li data-id="caixa"><input type="checkbox" id="chk-caixa"><label for="chk-caixa">Comprar/testar a caixa de som Bluetooth na loja</label></li>
+    </ul>
+  </section>
+
+  <footer>
+    Documento vivo — atualize conforme o projeto avançar. Plano de arquitetura, não implementação final.
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var KEY = "locutor-camisa-treze-checklist";
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { state = {}; }
+  var items = document.querySelectorAll("#checklist li");
+  items.forEach(function(li){
+    var id = li.getAttribute("data-id");
+    var cb = li.querySelector("input");
+    if (state[id]) { cb.checked = true; li.classList.add("done"); }
+    cb.addEventListener("change", function(){
+      li.classList.toggle("done", cb.checked);
+      state[id] = cb.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {}
+    });
+  });
+})();
+</script>
