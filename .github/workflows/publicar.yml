@@ -2,7 +2,9 @@ name: Publicar locuções
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    # Horários em UTC (Brasília = UTC-3): segunda a sábado, de 06:00 a 20:00 em Brasília, a cada 15 minutos.
+    - cron: "*/15 9-22 * * 1-6"
+    - cron: "0 23 * * 1-6"
   workflow_dispatch:
 
 concurrency:
@@ -34,6 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       mudou: ${{ steps.construir.outputs.mudou }}
+      falhas: ${{ steps.construir.outputs.falhas }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -89,6 +92,38 @@ jobs:
           path: estado
       - name: Atualizar status na planilha
         run: python src/publicar.py marcar
+      - name: Sinalizar anúncios que não viraram áudio
+        if: needs.construir.outputs.falhas != '' && needs.construir.outputs.falhas != '0'
+        run: |
+          echo "::error::${{ needs.construir.outputs.falhas }} anúncio(s) não puderam virar áudio. Veja os avisos do job construir."
+          exit 1
+
+  avisar:
+    needs: [rascunhos, construir, publicar, marcar, manter-ativo]
+    if: ${{ always() && contains(needs.*.result, 'failure') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ver se a execução anterior já tinha falhado
+        id: anterior
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          anterior=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow publicar.yml --status completed --limit 1 --json conclusion --jq '.[0].conclusion')
+          echo "conclusao=$anterior" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Enviar e-mail de aviso
+        if: steps.anterior.outputs.conclusao != 'failure'
+        run: python src/avisar_erro.py
+        env:
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_APP_PASSWORD: ${{ secrets.SMTP_APP_PASSWORD }}
+          NEEDS_JSON: ${{ toJSON(needs) }}
 
   manter-ativo:
     if: github.event_name == 'schedule'

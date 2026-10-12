@@ -86,6 +86,7 @@ def construir():
     (SITE / "audios").mkdir(parents=True)
 
     entradas, publicar, arquivar, vistos = [], [], [], set()
+    falhas = 0
     for numero, linha in linhas:
         if linha["status"] not in ("Aprovado", "Publicado"):
             continue
@@ -93,11 +94,13 @@ def construir():
         texto = linha["texto_final"].strip()
         if not ID_VALIDO.match(id_) or id_ in vistos or not texto:
             print(f"::warning::Linha {numero}: id inválido, repetido ou sem texto_final; ignorada.")
+            falhas += 1
             continue
         vistos.add(id_)
         limite = valido_ate(linha)
         if limite is None:
             print(f"::warning::Linha {numero} ({id_}): sem data_sorteio ou prazo_aposta válido; ignorada.")
+            falhas += 1
             continue
         if agora > limite:
             arquivar.append(id_)
@@ -113,6 +116,7 @@ def construir():
                 sintetizar(texto, destino)
             except Exception as erro:
                 print(f"::warning::Linha {numero} ({id_}): falha ao gerar o áudio: {erro}")
+                falhas += 1
                 continue
         entradas.append({"id": id_, "arquivo": f"audios/{id_}.mp3", "sha": sha, "valido_ate": limite.isoformat()})
         if linha["status"] == "Aprovado":
@@ -127,8 +131,9 @@ def construir():
     ESTADO.write_text(json.dumps({"publicar": publicar, "arquivar": arquivar}, ensure_ascii=False), encoding="utf-8")
 
     novo = {e["id"]: e["sha"] for e in entradas}
-    print(f"Áudios no ar: {len(entradas)} | a marcar como Publicado: {len(publicar)} | vencidos: {len(arquivar)}")
+    print(f"Áudios no ar: {len(entradas)} | a marcar como Publicado: {len(publicar)} | vencidos: {len(arquivar)} | falhas: {falhas}")
     escrever_saida("mudou", "true" if ao_vivo is None or novo != ao_vivo else "false")
+    escrever_saida("falhas", falhas)
 
 
 def marcar():
