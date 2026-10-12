@@ -1,0 +1,15 @@
+LOCUTOR CAMISA TREZE - COMO USAR NO NOTEBOOK DA LOTERICA
+
+Instalar (uma vez só)
+1. Instale o VLC (videolan.org), se ainda não estiver instalado.
+2. Dê dois cliques em Instalar.bat. Ele cria o atalho "Iniciar locução" na área de trabalho
+   e programa o encerramento do VLC todo dia às 20h.
+
+Usar no dia a dia
+1. Ligue a caixa de som Bluetooth e confirme que o notebook está conectado a ela.
+2. Dê dois cliques em "Iniciar locução". O programa baixa os anúncios novos, tira os vencidos
+   e abre o VLC tocando um anúncio atrás do outro, com 5 segundos de pausa entre eles, em loop.
+3. Para parar: clique no botão de parar do VLC ou feche a janela dele.
+4. Para atualizar os anúncios durante o dia: dê dois cliques em "Iniciar locução" de novo.
+
+Se aparecer "Nenhum anúncio no ar", não há anúncios aprovados na planilha. Avise quem cuida do sistema.

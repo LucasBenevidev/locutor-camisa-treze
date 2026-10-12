@@ -15,6 +15,10 @@ py src/gerar_audio.py "Atenção! A Mega-Sena da Virada está acumulada." -o sai
 
 Os áudios gerados localmente ficam em `saida/` (ignorada pelo git).
 
+## Player da loja (notebook Windows)
+
+A pasta [player/](player/) tem o que roda no notebook da lotérica, sem precisar de Python: `Iniciar-Locucao.ps1` baixa os áudios do GitHub Pages, remove os vencidos, monta uma playlist com 5 segundos de silêncio entre os anúncios e abre o VLC em loop. `Instalar.bat` copia tudo para `C:\Locutor`, cria o atalho "Iniciar locução" e agenda o fechamento do VLC todo dia às 20h. Instruções para o gerente em [player/LEIA-ME.txt](player/LEIA-ME.txt).
+
 ## Rascunhos com IA (Fase 2)
 
 Lê as linhas com status Pendente da planilha, pede o texto ao Gemini e grava em `texto_ia` e `texto_final`, mudando o status para "Em revisão". Use `--dry-run` para ver sem gravar.
