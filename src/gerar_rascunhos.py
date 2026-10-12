@@ -1,18 +1,21 @@
 """Gera com IA o rascunho de locução das linhas Pendentes da planilha.
 
-Para cada linha com status Pendente e texto_ia vazio, grava o rascunho em texto_ia
+Para cada linha com status Pendente (ou vazio) e texto_ia vazio, grava o rascunho em texto_ia
 e texto_final e muda o status para "Em revisão".
 """
 import argparse
 import os
 import sys
+import time
 
 from google import genai
+from google.genai import errors as genai_errors
 from google.genai import types
 
 from planilha import abrir_aba, atualizar_linha, ler_linhas
 
 MODELO = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
+TENTATIVAS = 4
 
 INSTRUCOES = """Você escreve locuções curtas para uma caixa de som dentro da Loteria Camisa Treze, \
 uma casa lotérica em Brasília. O texto será lido em voz alta por uma voz sintética em português do Brasil.
@@ -44,15 +47,22 @@ def montar_pedido(linha):
 
 
 def gerar_texto(cliente, linha):
-    resposta = cliente.models.generate_content(
-        model=MODELO,
-        contents=montar_pedido(linha),
-        config=types.GenerateContentConfig(
-            system_instruction=INSTRUCOES,
-            temperature=0.7,
-            thinking_config=types.ThinkingConfig(thinking_budget=0),
-        ),
-    )
+    for tentativa in range(1, TENTATIVAS + 1):
+        try:
+            resposta = cliente.models.generate_content(
+                model=MODELO,
+                contents=montar_pedido(linha),
+                config=types.GenerateContentConfig(
+                    system_instruction=INSTRUCOES,
+                    temperature=0.7,
+                    thinking_config=types.ThinkingConfig(thinking_budget=0),
+                ),
+            )
+            break
+        except genai_errors.APIError as erro:
+            if erro.code not in (429, 500, 503) or tentativa == TENTATIVAS:
+                raise
+            time.sleep(10 * tentativa)
     texto = (resposta.text or "").strip()
     if not texto:
         raise RuntimeError("a IA devolveu texto vazio")
@@ -68,7 +78,13 @@ def main():
     aba = abrir_aba()
     cabecalho, linhas = ler_linhas(aba)
 
-    pendentes = [(n, l) for n, l in linhas if l["status"] == "Pendente" and not l["texto_ia"].strip()]
+    pendentes = [
+        (n, l)
+        for n, l in linhas
+        if l["status"].strip() in ("", "Pendente")
+        and not l["texto_ia"].strip()
+        and (l["id"].strip() or l["loteria"].strip())
+    ]
     print(f"Modelo: {MODELO} | linhas pendentes: {len(pendentes)}")
 
     falhas = 0
