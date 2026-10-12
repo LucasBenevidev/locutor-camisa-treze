@@ -1,6 +1,7 @@
 """Converte um texto aprovado em mp3 usando a voz Vitória (neural) do Amazon Polly."""
 import argparse
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -10,6 +11,7 @@ VOZ = "Vitoria"
 MOTOR = "neural"
 REGIAO = "us-east-1"
 LIMITE_CARACTERES = 3000
+TAG = re.compile(r"</?[a-zA-Z][^>]*>")
 
 
 def criar_cliente():
@@ -18,14 +20,26 @@ def criar_cliente():
     return sessao.client("polly")
 
 
+def preparar(texto: str):
+    """Devolve (texto, tipo). Se houver tags como <break>, trata como SSML e envolve em <speak>."""
+    if TAG.search(texto):
+        if not texto.lstrip().startswith("<speak"):
+            texto = f"<speak>{texto}</speak>"
+        return texto, "ssml"
+    return texto, "text"
+
+
 def sintetizar(texto: str, destino: Path) -> Path:
     texto = texto.strip()
     if not texto:
         raise ValueError("O texto está vazio.")
-    if len(texto) > LIMITE_CARACTERES:
-        raise ValueError(f"O texto tem {len(texto)} caracteres; o limite do Polly é {LIMITE_CARACTERES}.")
+    texto, tipo = preparar(texto)
+    tamanho = len(TAG.sub("", texto))
+    if tamanho > LIMITE_CARACTERES:
+        raise ValueError(f"O texto tem {tamanho} caracteres; o limite do Polly é {LIMITE_CARACTERES}.")
     resposta = criar_cliente().synthesize_speech(
         Text=texto,
+        TextType=tipo,
         VoiceId=VOZ,
         Engine=MOTOR,
         OutputFormat="mp3",
