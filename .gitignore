@@ -13,3 +13,5 @@ locutor-*.json
 
 # áudios gerados localmente (os publicados saem do GitHub Actions)
 saida/
+site/
+estado/

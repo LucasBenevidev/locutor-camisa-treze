@@ -1,0 +1,106 @@
+name: Publicar locuções
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: locutor
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+
+jobs:
+  rascunhos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Gerar rascunhos das linhas Pendentes
+        run: python src/gerar_rascunhos.py
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+  construir:
+    runs-on: ubuntu-latest
+    outputs:
+      mudou: ${{ steps.construir.outputs.mudou }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Gerar áudios e montar o site
+        id: construir
+        run: python src/publicar.py construir
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Preparar o site para o Pages
+        if: steps.construir.outputs.mudou == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Guardar o que deve ser marcado na planilha
+        uses: actions/upload-artifact@v4
+        with:
+          name: estado
+          path: estado/estado.json
+
+  publicar:
+    needs: construir
+    if: needs.construir.outputs.mudou == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+  marcar:
+    needs: [construir, publicar]
+    if: ${{ !cancelled() && needs.construir.result == 'success' && (needs.publicar.result == 'success' || needs.publicar.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: estado
+          path: estado
+      - name: Atualizar status na planilha
+        run: python src/publicar.py marcar
+
+  manter-ativo:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Registrar atividade se o último commit tem mais de 20 dias
+        run: |
+          idade=$(( $(date +%s) - $(git log -1 --format=%ct) ))
+          if [ "$idade" -gt 1728000 ]; then
+            git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit --allow-empty -m "Registra atividade para manter o agendamento ativo"
+            git push
+          fi
