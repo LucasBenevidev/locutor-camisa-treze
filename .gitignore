@@ -6,5 +6,10 @@ __pycache__/
 credentials
 *.csv.bak
 
+# chaves de contas de serviço do Google
+*service-account*.json
+*service_account*.json
+locutor-*.json
+
 # áudios gerados localmente (os publicados saem do GitHub Actions)
 saida/

@@ -14,3 +14,13 @@ py src/gerar_audio.py "Atenção! A Mega-Sena da Virada está acumulada." -o sai
 ```
 
 Os áudios gerados localmente ficam em `saida/` (ignorada pelo git).
+
+## Rascunhos com IA (Fase 2)
+
+Lê as linhas com status Pendente da planilha, pede o texto ao Gemini e grava em `texto_ia` e `texto_final`, mudando o status para "Em revisão". Use `--dry-run` para ver sem gravar.
+
+Requer a variável `GEMINI_API_KEY` e a chave da conta de serviço do Google em `~/.config/locutor/service-account.json` (no GitHub Actions, os secrets `GEMINI_API_KEY` e `GOOGLE_SERVICE_ACCOUNT_JSON`). O modelo pode ser trocado com `GEMINI_MODEL`.
+
+```powershell
+py src/gerar_rascunhos.py --dry-run
+```
