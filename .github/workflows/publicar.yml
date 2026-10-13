@@ -1,10 +1,6 @@
 name: Publicar locuções
 
 on:
-  schedule:
-    # Horários em UTC (Brasília = UTC-3): segunda a sábado, de 06:00 a 20:00 em Brasília, a cada 15 minutos.
-    - cron: "*/15 9-22 * * 1-6"
-    - cron: "0 23 * * 1-6"
   workflow_dispatch:
 
 concurrency:
@@ -99,7 +95,7 @@ jobs:
           exit 1
 
   avisar:
-    needs: [rascunhos, construir, publicar, marcar, manter-ativo]
+    needs: [rascunhos, construir, publicar, marcar]
     if: ${{ always() && contains(needs.*.result, 'failure') }}
     runs-on: ubuntu-latest
     permissions:
@@ -124,18 +120,3 @@ jobs:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_APP_PASSWORD: ${{ secrets.SMTP_APP_PASSWORD }}
           NEEDS_JSON: ${{ toJSON(needs) }}
-
-  manter-ativo:
-    if: github.event_name == 'schedule'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Registrar atividade se o último commit tem mais de 20 dias
-        run: |
-          idade=$(( $(date +%s) - $(git log -1 --format=%ct) ))
-          if [ "$idade" -gt 1728000 ]; then
-            git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit --allow-empty -m "Registra atividade para manter o agendamento ativo"
-            git push
-          fi
