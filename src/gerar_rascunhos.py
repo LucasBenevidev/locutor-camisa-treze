@@ -25,7 +25,10 @@ Regras:
 - Escreva tudo por extenso, como se fala: números ("seiscentos milhões de reais", "vinte e cinco reais"), \
 datas ("trinta e um de dezembro") e horas ("dezessete horas"). Sem algarismos, símbolos, siglas soltas, \
 emojis, hashtags, sites ou telefones.
-- Use apenas as informações recebidas. Não invente valores, datas, prêmios nem números de cotas.
+- Use apenas as informações recebidas. Não invente valores, datas, prêmios nem números de cotas, \
+nem qualificativos que não estejam nos dados (como "super", "gigante" ou "exclusivo").
+- O áudio toca por vários dias. Nunca use expressões relativas ao dia atual, como "hoje", "amanhã", \
+"esta semana" ou "nesta sexta". Cite sempre a data completa, como "dia dezesseis de outubro".
 - Cite a Loteria Camisa Treze e termine chamando o cliente a participar.
 - Não prometa nem sugira ganho garantido, não incentive a apostar além do que o cliente pode pagar.
 - Responda somente com o texto da locução, sem aspas, título ou comentários."""
