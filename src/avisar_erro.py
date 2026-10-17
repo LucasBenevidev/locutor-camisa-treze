@@ -5,6 +5,7 @@ import smtplib
 import sys
 from datetime import datetime
 from email.message import EmailMessage
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 PARA = "professorbenevides@gmail.com"
@@ -23,6 +24,13 @@ def main():
     if falhas not in ("", "0"):
         com_erro.append(f"construir ({falhas} anúncio(s) não puderam virar áudio)")
 
+    detalhes = ""
+    arquivo_estado = Path("estado/estado.json")
+    if arquivo_estado.exists():
+        problemas = json.loads(arquivo_estado.read_text(encoding="utf-8")).get("falhas", [])
+        if problemas:
+            detalhes = "O que precisa ser corrigido na planilha:\n- " + "\n- ".join(problemas) + "\n\n"
+
     url = f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}"
     agora = datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M")
 
@@ -34,6 +42,7 @@ def main():
     msg.set_content(
         f"Uma rotina do Locutor Camisa Treze falhou em {agora} (horário de Brasília).\n\n"
         f"Rotinas com problema: {', '.join(com_erro) or 'não identificadas'}\n\n"
+        f"{detalhes}"
         f"Detalhes e registro da execução: {url}\n\n"
         "Enquanto o problema não for corrigido, novos áudios podem não ser publicados. "
         "Os áudios que já estão no ar continuam tocando.\n"

@@ -113,6 +113,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Baixar detalhes dos problemas
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: estado
+          path: estado
       - name: Enviar e-mail de aviso
         if: steps.anterior.outputs.conclusao != 'failure'
         run: python src/avisar_erro.py

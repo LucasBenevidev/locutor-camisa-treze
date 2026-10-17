@@ -12,6 +12,7 @@ import os
 import re
 import shutil
 import time
+import unicodedata
 import urllib.error
 import urllib.request
 from datetime import datetime
@@ -44,12 +45,20 @@ def ler_data(texto, padrao):
         return None
 
 
+def normalizar_id(texto):
+    """Troca acentos, espaços e símbolos por hífen, para o id servir de nome de arquivo."""
+    sem_acento = unicodedata.normalize("NFKD", texto).encode("ascii", "ignore").decode("ascii")
+    return re.sub(r"[^A-Za-z0-9_]+", "-", sem_acento).strip("-")
+
+
 def valido_ate(linha):
+    """Fim do prazo de aposta, nunca depois do fim do dia do sorteio."""
     prazo = ler_data(linha["prazo_aposta"], "%d/%m/%Y %H:%M")
-    if prazo:
-        return prazo
     dia = ler_data(linha["data_sorteio"], "%d/%m/%Y")
-    return dia.replace(hour=23, minute=59, second=59) if dia else None
+    fim_do_dia = dia.replace(hour=23, minute=59, second=59) if dia else None
+    if prazo and fim_do_dia:
+        return min(prazo, fim_do_dia)
+    return prazo or fim_do_dia
 
 
 def baixar(caminho):
@@ -85,25 +94,34 @@ def construir():
         shutil.rmtree(SITE)
     (SITE / "audios").mkdir(parents=True)
 
-    entradas, publicar, arquivar, vistos = [], [], [], set()
-    falhas = 0
+    entradas, publicar, arquivar, vistos, problemas = [], [], [], set(), []
+
+    def falhar(mensagem):
+        problemas.append(mensagem)
+        print(f"::warning::{mensagem}")
+
     for numero, linha in linhas:
         if linha["status"] not in ("Aprovado", "Publicado"):
             continue
-        id_ = linha["id"].strip()
+        id_planilha = linha["id"].strip()
+        id_ = normalizar_id(id_planilha)
         texto = linha["texto_final"].strip()
-        if not ID_VALIDO.match(id_) or id_ in vistos or not texto:
-            print(f"::warning::Linha {numero}: id inválido, repetido ou sem texto_final; ignorada.")
-            falhas += 1
+        if not ID_VALIDO.match(id_):
+            falhar(f"Linha {numero}: o id '{id_planilha}' está vazio ou não pode ser usado. Use letras, números e hífen.")
+            continue
+        if id_ in vistos:
+            falhar(f"Linha {numero}: o id '{id_planilha}' está repetido em outra linha. Use um id diferente para cada anúncio.")
+            continue
+        if not texto:
+            falhar(f"Linha {numero} ({id_planilha}): o texto_final está vazio.")
             continue
         vistos.add(id_)
         limite = valido_ate(linha)
         if limite is None:
-            print(f"::warning::Linha {numero} ({id_}): sem data_sorteio ou prazo_aposta válido; ignorada.")
-            falhas += 1
+            falhar(f"Linha {numero} ({id_planilha}): sem data_sorteio nem prazo_aposta válidos (use o formato dd/mm/aaaa).")
             continue
         if agora > limite:
-            arquivar.append(id_)
+            arquivar.append(id_planilha)
             continue
 
         sha = hash_texto(texto)
@@ -115,12 +133,11 @@ def construir():
             try:
                 sintetizar(texto, destino)
             except Exception as erro:
-                print(f"::warning::Linha {numero} ({id_}): falha ao gerar o áudio: {erro}")
-                falhas += 1
+                falhar(f"Linha {numero} ({id_planilha}): não foi possível gerar o áudio: {erro}")
                 continue
         entradas.append({"id": id_, "arquivo": f"audios/{id_}.mp3", "sha": sha, "valido_ate": limite.isoformat()})
         if linha["status"] == "Aprovado":
-            publicar.append({"id": id_, "sha": sha})
+            publicar.append({"id": id_planilha, "sha": sha})
 
     entradas.sort(key=lambda e: e["id"])
     manifesto = {"atualizado_em": agora.isoformat(timespec="seconds"), "audios": entradas}
@@ -128,12 +145,15 @@ def construir():
     (SITE / "index.html").write_text(PAGINA_INICIAL, encoding="utf-8")
 
     ESTADO.parent.mkdir(parents=True, exist_ok=True)
-    ESTADO.write_text(json.dumps({"publicar": publicar, "arquivar": arquivar}, ensure_ascii=False), encoding="utf-8")
+    ESTADO.write_text(
+        json.dumps({"publicar": publicar, "arquivar": arquivar, "falhas": problemas}, ensure_ascii=False),
+        encoding="utf-8",
+    )
 
     novo = {e["id"]: e["sha"] for e in entradas}
-    print(f"Áudios no ar: {len(entradas)} | a marcar como Publicado: {len(publicar)} | vencidos: {len(arquivar)} | falhas: {falhas}")
+    print(f"Áudios no ar: {len(entradas)} | a marcar como Publicado: {len(publicar)} | vencidos: {len(arquivar)} | falhas: {len(problemas)}")
     escrever_saida("mudou", "true" if ao_vivo is None or novo != ao_vivo else "false")
-    escrever_saida("falhas", falhas)
+    escrever_saida("falhas", len(problemas))
 
 
 def marcar():
@@ -153,6 +173,9 @@ def marcar():
         if achado and achado[1]["status"] in ("Aprovado", "Publicado"):
             atualizar_linha(aba, cabecalho, achado[0], {"status": "Arquivado"})
             print(f"{id_}: Arquivado (venceu)")
+
+    for mensagem in estado.get("falhas", []):
+        print(f"::error::{mensagem}")
 
 
 def main():
