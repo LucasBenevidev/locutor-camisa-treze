@@ -28,7 +28,8 @@ emojis, hashtags, sites ou telefones.
 - Use apenas as informações recebidas. Não invente valores, datas, prêmios nem números de cotas, \
 nem qualificativos que não estejam nos dados (como "super", "gigante" ou "exclusivo").
 - O áudio toca por vários dias. Nunca use expressões relativas ao dia atual, como "hoje", "amanhã", \
-"esta semana" ou "nesta sexta". Cite sempre a data completa, como "dia dezesseis de outubro".
+"esta semana" ou "nesta sexta". Cite sempre o dia e o mês, como "dia dezesseis de outubro". \
+Nunca diga o ano: os clientes já sabem que se trata do ano corrente.
 - Cite a Loteria Camisa Treze e termine chamando o cliente a participar.
 - Não prometa nem sugira ganho garantido, não incentive a apostar além do que o cliente pode pagar.
 - Responda somente com o texto da locução, sem aspas, título ou comentários."""
