@@ -231,6 +231,17 @@
   .chip.pendente{background:var(--warn-tint); color:var(--warn);}
   .chip.aprovado{background:var(--good-tint); color:var(--good);}
   .chip.publicado{background:var(--info-tint); color:var(--info);}
+  .chip.revisao{background:var(--accent-tint); color:var(--accent-deep);}
+  td .chip{display:inline-block; white-space:nowrap;}
+  .sub-title{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    letter-spacing:0.09em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    font-weight:600;
+    margin:22px 0 10px;
+  }
 
   /* Tables */
   .table-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:10px;}
@@ -316,26 +327,28 @@
   <header class="hero">
     <p class="eyebrow">Plano de projeto</p>
     <h1>Locutor Camisa Treze</h1>
-    <p class="subtitle">Sistema de locução automática para a casa lotérica em Brasília: texto de propaganda escrito por IA, sempre revisado por humano, narrado pela Amazon Polly e tocado numa caixa de som Bluetooth dentro da loja.</p>
+    <p class="subtitle">Sistema de locução para a casa lotérica em Brasília: texto de propaganda escrito por IA, sempre revisado por humano, narrado pela Amazon Polly e tocado numa caixa de som Bluetooth dentro da loja. Quem decide quando processar é o gerente, por um menu da própria planilha.</p>
     <div class="meta-row">
       <span><b>Loja:</b> Loteria Camisa Treze — Brasília</span>
-      <span><b>Hardware da loja:</b> PC Windows, 8 GB RAM</span>
+      <span><b>Voz:</b> Vitória (neural, pt-BR)</span>
+      <span><b>IA do texto:</b> Gemini</span>
       <span><b>Distribuição:</b> GitHub Pages (grátis)</span>
+      <span><b>Player:</b> VLC no notebook Windows</span>
     </div>
   </header>
 
   <section id="visao-geral">
     <h2>Visão geral</h2>
-    <p>A ideia nasceu de uma propaganda que seu pai recebeu: um produto pronto para casas lotéricas que toca, numa caixa Bluetooth, áudios gerados por IA anunciando os próximos sorteios e bolões. Em vez de assinar esse produto, a proposta aqui é construir uma versão própria — mais barata e sob controle da família.</p>
-    <p>O princípio central é o mesmo que seu pai pediu: <strong>nenhum áudio vai ao ar sem passar por revisão humana</strong>. A IA só rascunha o texto a partir de dados reais — sorteio, valor da cota, prêmio, prazo do bolão — digitados por quem conhece o negócio.</p>
+    <p>A ideia nasceu de uma propaganda que seu pai recebeu: um produto pronto para casas lotéricas que toca, numa caixa Bluetooth, áudios gerados por IA anunciando os próximos sorteios e bolões. Em vez de assinar esse produto, a proposta foi construir uma versão própria — mais barata e sob controle da família.</p>
+    <p>O princípio central é o mesmo que seu pai pediu: <strong>nenhum áudio vai ao ar sem passar por revisão humana</strong>. A IA só rascunha o texto a partir de dados reais — sorteio, valor da cota, prêmio, prazo do bolão — digitados por quem conhece o negócio. A revisão importa na prática: a IA não sabe a data de hoje e já escreveu "de hoje" num anúncio de sexta-feira, erro que só o revisor percebe.</p>
   </section>
 
   <section id="arquitetura">
     <h2>Arquitetura</h2>
-    <p class="section-intro">Todo o trabalho de IA e de conversão de texto em voz roda de graça no GitHub Actions, e o próprio GitHub Pages publica os áudios prontos. A loja só baixa o resultado e toca — e como tudo vive na nuvem, a planilha pode ser atualizada de qualquer lugar, não só do notebook da lotérica.</p>
+    <p class="section-intro">Nada roda sozinho. Quando o gerente clica em <strong>Locutor ▸ Gerar rascunhos e publicar agora</strong> na planilha, o GitHub Actions escreve os rascunhos e gera os áudios, e o GitHub Pages publica o resultado. A loja só baixa os arquivos prontos e toca. Como tudo vive na nuvem, a planilha pode ser atualizada de qualquer lugar.</p>
     <figure class="diagram">
       <div class="svg-wrap">
-        <svg viewBox="0 0 1030 340" role="img" aria-label="Diagrama do fluxo: dados digitados numa planilha alimentam uma rotina de geração de texto por IA no GitHub Actions; o texto passa por revisão humana antes de ser enviado à Amazon Polly, que gera o áudio; o áudio é publicado no GitHub Pages e, por fim, baixado e tocado pelo computador da loja numa caixa de som Bluetooth em Brasília.">
+        <svg viewBox="0 0 1030 340" role="img" aria-label="Diagrama do fluxo: dados digitados numa planilha são processados quando o gerente clica no menu Locutor. No GitHub Actions, o Gemini escreve o rascunho, um humano revisa e aprova na planilha e a Amazon Polly gera o áudio. O áudio é publicado no GitHub Pages e, por fim, baixado e tocado pelo VLC no computador da loja, em Brasília, numa caixa de som Bluetooth.">
           <defs>
             <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
@@ -350,6 +363,10 @@
           <rect x="860" y="90" width="150" height="200" rx="10" fill="none" stroke="currentColor" stroke-opacity="0.35" stroke-width="1.5" stroke-dasharray="5 5"/>
           <text x="935" y="76" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" fill-opacity="0.65">LOJA — BRASÍLIA</text>
 
+          <!-- gatilho: menu da planilha -->
+          <path d="M85,158 V50 H270 V88" fill="none" stroke="var(--accent-deep)" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)" style="color:var(--accent-deep)"/>
+          <text x="178" y="40" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="var(--accent-deep)">clique no menu Locutor</text>
+
           <!-- n1 planilha -->
           <rect x="20" y="160" width="130" height="60" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
           <text x="85" y="185" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="13" font-weight="600" fill="currentColor">Planilha</text>
@@ -358,7 +375,7 @@
           <!-- n2 redator IA -->
           <rect x="205" y="160" width="130" height="60" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
           <text x="270" y="185" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="13" font-weight="600" fill="currentColor">Redator IA</text>
-          <text x="270" y="202" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="11.5" fill="currentColor" fill-opacity="0.65">gera rascunho</text>
+          <text x="270" y="202" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="11.5" fill="currentColor" fill-opacity="0.65">Gemini escreve</text>
 
           <!-- n3 revisão humana (highlight) -->
           <rect x="370" y="158" width="130" height="64" rx="8" fill="var(--accent-tint)" stroke="var(--accent)" stroke-width="2"/>
@@ -368,7 +385,7 @@
           <!-- n4 Polly -->
           <rect x="535" y="160" width="130" height="60" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
           <text x="600" y="185" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="13" font-weight="600" fill="currentColor">Amazon Polly</text>
-          <text x="600" y="202" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="11.5" fill="currentColor" fill-opacity="0.65">texto → áudio .mp3</text>
+          <text x="600" y="202" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="11.5" fill="currentColor" fill-opacity="0.65">voz Vitória → .mp3</text>
 
           <!-- n5 github pages -->
           <rect x="710" y="160" width="130" height="60" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
@@ -379,7 +396,7 @@
           <rect x="872" y="160" width="126" height="60" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
           <text x="935" y="181" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="12.5" font-weight="600" fill="currentColor">PC + caixa</text>
           <text x="935" y="196" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="12.5" font-weight="600" fill="currentColor">Bluetooth</text>
-          <text x="935" y="212" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="10.5" fill="currentColor" fill-opacity="0.6">baixa e toca</text>
+          <text x="935" y="212" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="10.5" fill="currentColor" fill-opacity="0.6">VLC em loop</text>
 
           <!-- arrows -->
           <line x1="150" y1="190" x2="203" y2="190" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
@@ -396,7 +413,7 @@
           <text x="856" y="243" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="currentColor" fill-opacity="0.6">5 · baixa</text>
         </svg>
       </div>
-      <figcaption>Os dados nascem numa planilha, viram texto e depois áudio dentro do GitHub Actions (grátis, roda na nuvem) — com um humano aprovando no meio do caminho — e só então chegam prontos ao computador da loja, que apenas baixa e toca.</figcaption>
+      <figcaption>Os dados nascem numa planilha. Um clique do gerente no menu Locutor faz o GitHub Actions (grátis, na nuvem) escrever o rascunho e, depois da aprovação humana, gerar o áudio. O resultado vai para o GitHub Pages e o computador da loja só baixa e toca.</figcaption>
     </figure>
   </section>
 
@@ -405,39 +422,39 @@
     <div class="cards">
       <div class="card">
         <span class="num">01</span>
-        <h3>Planilha de jogos e bolões</h3>
-        <p>Onde os dados nascem. Uma linha por sorteio ou bolão: loteria (Mega-Sena, Lotofácil, Quina...), data do sorteio, valor da cota, prêmio estimado, prazo.</p>
-        <div class="tags"><span class="tag">Google Sheets</span><span class="tag">Sheets API</span></div>
+        <h3>Planilha e menu Locutor</h3>
+        <p>Uma linha por sorteio, bolão ou promoção. O menu Locutor, no alto da planilha, dispara o processamento. A aba "Como usar" explica colunas e status ao gerente.</p>
+        <div class="tags"><span class="tag">Google Sheets</span><span class="tag">Apps Script</span></div>
       </div>
       <div class="card">
         <span class="num">02</span>
         <h3>Redator IA</h3>
-        <p>Lê as linhas novas da planilha e escreve um rascunho de locução curto, no tom de propaganda de casa lotérica.</p>
-        <div class="tags"><span class="tag">GitHub Actions</span><span class="tag">Claude (Haiku)</span></div>
+        <p>Escreve um rascunho curto para cada linha Pendente, só com os dados da linha, números por extenso e sem expressões como "hoje" ou "amanhã". Tenta de novo se o serviço estiver sobrecarregado.</p>
+        <div class="tags"><span class="tag">Gemini</span><span class="tag">GitHub Actions</span></div>
       </div>
       <div class="card">
         <span class="num">03</span>
         <h3>Revisão humana</h3>
-        <p>A própria planilha é o painel de aprovação: uma coluna de texto editável e um status controlam o que pode virar áudio.</p>
-        <div class="tags"><span class="tag">Google Sheets</span><span class="tag">controle manual</span></div>
+        <p>O revisor corrige o texto_final e muda o status para Aprovado. Dá para inserir pausas na fala com a tag break, escrita direto no texto.</p>
+        <div class="tags"><span class="tag">status na planilha</span><span class="tag">SSML</span></div>
       </div>
       <div class="card">
         <span class="num">04</span>
         <h3>Locutor digital</h3>
-        <p>Converte o texto aprovado num arquivo .mp3, com voz neural em português do Brasil.</p>
-        <div class="tags"><span class="tag">Amazon Polly</span><span class="tag">voz neural pt-BR</span></div>
+        <p>Converte o texto aprovado em mp3 com a voz Vitória, escolhida numa comparação entre as vozes pt-BR. Reaproveita os áudios já gerados e só refaz o que mudou.</p>
+        <div class="tags"><span class="tag">Amazon Polly</span><span class="tag">neural pt-BR</span></div>
       </div>
       <div class="card">
         <span class="num">05</span>
-        <h3>Distribuição</h3>
-        <p>Os áudios prontos e uma lista do que está no ar são publicados pelo próprio workflow num site estático gratuito, acessível por HTTPS.</p>
-        <div class="tags"><span class="tag">GitHub Pages</span><span class="tag">HTTPS</span></div>
+        <h3>Distribuição e avisos</h3>
+        <p>Publica os áudios e uma lista do que está no ar. Arquiva sozinho o que venceu. Se algo falhar, manda e-mail para o responsável, com cópia para a lotérica, dizendo qual linha corrigir.</p>
+        <div class="tags"><span class="tag">GitHub Pages</span><span class="tag">e-mail de erro</span></div>
       </div>
       <div class="card">
         <span class="num">06</span>
         <h3>Player da loja</h3>
-        <p>Baixa os áudios novos, remove os que já venceram (bolão já sorteado) e toca um por vez na caixa Bluetooth em horário comercial.</p>
-        <div class="tags"><span class="tag">Python</span><span class="tag">Agendador de Tarefas</span></div>
+        <p>O atalho "Iniciar locução" baixa os áudios novos, descarta os vencidos e abre o VLC em loop, com 5 segundos de silêncio entre anúncios. O VLC é fechado todo dia às 20h.</p>
+        <div class="tags"><span class="tag">PowerShell</span><span class="tag">VLC</span></div>
       </div>
     </div>
   </section>
@@ -445,33 +462,34 @@
   <section id="fluxo">
     <h2>Fluxo passo a passo</h2>
     <ol class="flow">
-      <li><p><strong>Alguém digita os dados</strong> do sorteio ou bolão na planilha — loteria, data, valor, prêmio, prazo.</p></li>
-      <li><p><strong>Uma rotina agendada no GitHub Actions</strong> lê as linhas novas e pede à IA um rascunho de locução.</p></li>
+      <li><p><strong>Alguém digita os dados</strong> do sorteio ou bolão na planilha: loteria, data, prêmio, valor da cota, prazo. O status fica Pendente ou em branco.</p></li>
+      <li><p><strong>O gerente clica em Locutor ▸ Gerar rascunhos e publicar agora.</strong> A planilha pede ao GitHub que rode o processamento. Em 1 a 2 minutos ele termina.</p></li>
       <li>
-        <p><strong>O rascunho volta para a planilha</strong> para revisão. Alguém edita se precisar e muda o status.</p>
+        <p><strong>A IA escreve o rascunho</strong> de cada linha Pendente, e o status vira Em revisão. O revisor lê, corrige datas e horários se precisar, e muda o status para Aprovado.</p>
         <div class="chips-demo">
           <span class="chip pendente">Pendente</span>
+          <span class="chip revisao">Em revisão</span>
           <span class="chip aprovado">Aprovado</span>
           <span class="chip publicado">Publicado</span>
         </div>
       </li>
-      <li><p><strong>Uma segunda rotina detecta as linhas aprovadas</strong> e envia o texto à Amazon Polly, que devolve o áudio.</p></li>
-      <li><p><strong>O áudio e a lista atualizada</strong> de conteúdos ativos são publicados no GitHub Pages.</p></li>
-      <li><p><strong>O computador da loja verifica essa lista</strong> periodicamente, baixa o que é novo, apaga o que venceu e toca os áudios na caixa Bluetooth durante o funcionamento da loja.</p></li>
+      <li><p><strong>Em um novo clique no menu,</strong> as linhas Aprovadas vão para a Amazon Polly, que devolve o mp3 com a voz Vitória.</p></li>
+      <li><p><strong>Os áudios e a lista do que está no ar</strong> são publicados no GitHub Pages. As linhas viram Publicado; as que passaram do prazo de aposta viram Arquivado.</p></li>
+      <li><p><strong>No notebook da loja,</strong> o gerente clica em Iniciar locução. O programa baixa o que é novo, apaga o que venceu e o VLC toca um anúncio atrás do outro em loop, até alguém parar.</p></li>
     </ol>
   </section>
 
-  <section id="cronograma">
-    <h2>Cronograma em fases</h2>
+  <section id="situacao">
+    <h2>Situação das fases</h2>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Fase</th><th>Objetivo</th><th>Duração</th></tr></thead>
+        <thead><tr><th>Fase</th><th>O que foi feito</th><th>Situação</th></tr></thead>
         <tbody>
-          <tr><td><strong>0 — Preparação</strong></td><td>Criar conta AWS, ativar o Amazon Polly, montar a planilha modelo, providenciar a caixa Bluetooth.</td><td class="num">1 semana</td></tr>
-          <tr><td><strong>1 — MVP manual</strong></td><td>Script único, disparado à mão: lê a planilha, gera texto, sintetiza e salva o áudio para ajustar o tom antes de automatizar.</td><td class="num">1–2 semanas</td></tr>
-          <tr><td><strong>2 — Automação na nuvem</strong></td><td>Workflows agendados no GitHub Actions, com publicação automática no GitHub Pages.</td><td class="num">1–2 semanas</td></tr>
-          <tr><td><strong>3 — Player da loja</strong></td><td>Script no PC Windows com Agendador de Tarefas, regras de horário e não repetição, testado ao vivo.</td><td class="num">1 semana</td></tr>
-          <tr><td><strong>4 — Ajuste fino</strong></td><td>Expiração automática por data de sorteio, variedade de vozes, volume, relatório do que tocou.</td><td class="num">contínuo</td></tr>
+          <tr><td><strong>0 — Preparação</strong></td><td>Conta AWS e usuário só para o Polly, repositório no GitHub, planilha modelo no Drive, conta de serviço do Google.</td><td><span class="chip aprovado">Concluída</span></td></tr>
+          <tr><td><strong>1 — Voz</strong></td><td>Comparação das vozes pt-BR da Polly, com a escolha da Vitória neural. Script que converte texto em mp3, com suporte a pausas.</td><td><span class="chip aprovado">Concluída</span></td></tr>
+          <tr><td><strong>2 — Nuvem</strong></td><td>Rascunhos com Gemini, geração de áudio, publicação no GitHub Pages e avisos por e-mail. O agendamento automático foi testado e descartado: o GitHub dispara execuções agendadas de forma irregular. Fica só o menu da planilha.</td><td><span class="chip aprovado">Concluída</span></td></tr>
+          <tr><td><strong>3 — Player</strong></td><td>Script em PowerShell com VLC, testado neste PC. Falta instalar no notebook da lotérica.</td><td><span class="chip revisao">Falta instalar</span></td></tr>
+          <tr><td><strong>4 — Operação</strong></td><td>Cadastrar os primeiros anúncios reais, treinar o gerente e ajustar o texto da IA conforme as revisões.</td><td><span class="chip pendente">A fazer</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -484,70 +502,88 @@
         <thead><tr><th>Item</th><th>Uso estimado</th><th class="num">Custo estimado</th></tr></thead>
         <tbody>
           <tr><td>Amazon Polly (voz neural)</td><td>~20 mil caracteres/mês (25–30 áudios)</td><td class="num">Grátis no 1º ano; depois ~US$ 0,30/mês</td></tr>
-          <tr><td>Geração de texto (Claude Haiku)</td><td>~30 textos curtos/mês</td><td class="num">&lt; US$ 1/mês</td></tr>
+          <tr><td>Geração de texto (Gemini)</td><td>~30 textos curtos/mês</td><td class="num">Faixa gratuita do Google</td></tr>
           <tr><td>GitHub Actions e Pages</td><td>Repositório público, poucos MB de áudio</td><td class="num">Grátis</td></tr>
-          <tr><td>Computador da loja</td><td>Já existente</td><td class="num">Sem custo adicional</td></tr>
+          <tr><td>Google Sheets e conta de serviço</td><td>Uma planilha, acesso por API</td><td class="num">Grátis</td></tr>
+          <tr><td>Computador da loja e VLC</td><td>Já existente; VLC é gratuito</td><td class="num">Sem custo adicional</td></tr>
           <tr><td>Caixa de som Bluetooth</td><td>1 unidade, se ainda não tiver</td><td class="num">~R$ 150–400</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="table-note">Preços da AWS e da Anthropic mudam com o tempo — confirme nos respectivos consoles antes de comprometer orçamento.</p>
+    <p class="table-note">Preços da AWS e limites da faixa gratuita do Google mudam com o tempo — confirme nos respectivos consoles antes de comprometer orçamento.</p>
   </section>
 
   <section id="decisoes">
-    <h2>Decisões em aberto</h2>
+    <h2>Decisões</h2>
+    <h3 class="sub-title">Já tomadas</h3>
     <div class="decisions">
       <div class="decision">
-        <p class="q">Qual serviço vai gerar o texto?</p>
-        <p class="a"><b>Sugestão:</b> API da Anthropic (Claude Haiku) — custo baixíssimo para textos curtos, mas exige criar uma chave de API própria.</p>
+        <p class="q">Hospedagem e distribuição</p>
+        <p class="a">GitHub Pages no lugar da Hostinger: de graça, atualizado de qualquer lugar, sem passo extra de FTP.</p>
       </div>
       <div class="decision">
-        <p class="q">Qual voz da Polly usar?</p>
-        <p class="a"><b>Sugestão:</b> testar as vozes neurais em português do Brasil e deixar seu pai escolher pelo ouvido.</p>
+        <p class="q">Texto e voz</p>
+        <p class="a">Gemini escreve o rascunho; a voz é a Vitória (neural) da Amazon Polly.</p>
       </div>
       <div class="decision">
-        <p class="q">Em que horário e com que frequência os áudios devem tocar?</p>
-        <p class="a">Depende do fluxo de clientes na loja — defina uma janela (ex.: 8h–18h) e um intervalo mínimo entre áudios.</p>
+        <p class="q">Quando processar</p>
+        <p class="a">Só quando o gerente clica no menu Locutor da planilha. Não há execução agendada.</p>
       </div>
       <div class="decision">
-        <p class="q">Quem mantém a conta AWS e a chave de API?</p>
-        <p class="a">Provavelmente você — envolve cartão de crédito e faturas que seu pai não deve precisar gerenciar.</p>
+        <p class="q">Como a loja toca os áudios</p>
+        <p class="a">Playlist em loop no VLC, iniciada pelo gerente, com 5 segundos entre anúncios. Parar é a qualquer momento. O VLC é fechado às 20h; o notebook continua ligado.</p>
+      </div>
+    </div>
+    <h3 class="sub-title">Em aberto</h3>
+    <div class="decisions">
+      <div class="decision">
+        <p class="q">Quem renova as credenciais?</p>
+        <p class="a">O token do GitHub usado pelo menu vale no máximo 1 ano. A chave da AWS e a senha de app do Gmail também são pessoais. <b>Sugestão:</b> anotar as datas de vencimento.</p>
       </div>
       <div class="decision">
-        <p class="q">E se a internet da loja cair?</p>
-        <p class="a"><b>Sugestão:</b> o player sempre toca a partir da pasta local; internet só é necessária para buscar áudios novos.</p>
+        <p class="q">Regras de publicidade de lotéricas</p>
+        <p class="a">A IA é instruída a não prometer ganho nem incentivar apostas acima do que o cliente pode pagar, mas isso não substitui conferir as regras da Caixa para anúncios.</p>
+      </div>
+      <div class="decision">
+        <p class="q">Quem revisa datas e horários?</p>
+        <p class="a">A IA não sabe a data de hoje. <b>Sugestão:</b> o revisor sempre confere se o prazo e a data do sorteio no texto batem com a planilha.</p>
       </div>
     </div>
   </section>
 
   <section id="proximos-passos">
-    <h2>Próximos passos imediatos</h2>
+    <h2>Próximos passos</h2>
     <ul class="checklist" id="checklist">
-      <li data-id="aws"><input type="checkbox" id="chk-aws"><label for="chk-aws">Criar conta AWS e ativar o Amazon Polly (região São Paulo)</label></li>
-      <li data-id="sheet"><input type="checkbox" id="chk-sheet"><label for="chk-sheet">Criar a planilha modelo com as colunas combinadas</label></li>
-      <li data-id="repo"><input type="checkbox" id="chk-repo"><label for="chk-repo">Criar o repositório público no GitHub</label></li>
-      <li data-id="mvp"><input type="checkbox" id="chk-mvp"><label for="chk-mvp">Escrever o primeiro script manual (Fase 1) e gerar um áudio de teste</label></li>
-      <li data-id="ouvir"><input type="checkbox" id="chk-ouvir"><label for="chk-ouvir">Ouvir o resultado com seu pai antes de automatizar</label></li>
-      <li data-id="caixa"><input type="checkbox" id="chk-caixa"><label for="chk-caixa">Comprar/testar a caixa de som Bluetooth na loja</label></li>
+      <li data-id="aws"><input type="checkbox" id="chk-aws" checked><label for="chk-aws">Criar conta AWS e ativar o Amazon Polly</label></li>
+      <li data-id="sheet"><input type="checkbox" id="chk-sheet" checked><label for="chk-sheet">Criar a planilha modelo e compartilhar com a lotérica</label></li>
+      <li data-id="repo"><input type="checkbox" id="chk-repo" checked><label for="chk-repo">Criar o repositório e o workflow no GitHub</label></li>
+      <li data-id="voz"><input type="checkbox" id="chk-voz" checked><label for="chk-voz">Comparar as vozes e escolher a Vitória</label></li>
+      <li data-id="menu"><input type="checkbox" id="chk-menu" checked><label for="chk-menu">Instalar o menu Locutor na planilha</label></li>
+      <li data-id="vlc"><input type="checkbox" id="chk-vlc"><label for="chk-vlc">Instalar o VLC e o player no notebook da lotérica (Instalar.bat)</label></li>
+      <li data-id="tarefa"><input type="checkbox" id="chk-tarefa"><label for="chk-tarefa">Conferir no notebook o atalho "Iniciar locução" e a tarefa que fecha o VLC às 20h</label></li>
+      <li data-id="menu-gerente"><input type="checkbox" id="chk-menu-gerente"><label for="chk-menu-gerente">Fazer o gerente usar o menu Locutor uma vez, autorizando o script no Google</label></li>
+      <li data-id="anuncios"><input type="checkbox" id="chk-anuncios"><label for="chk-anuncios">Cadastrar os primeiros anúncios reais e arquivar a linha de exemplo</label></li>
+      <li data-id="caixa"><input type="checkbox" id="chk-caixa"><label for="chk-caixa">Testar a caixa de som Bluetooth na loja, com dois anúncios, para ouvir a pausa de 5 segundos</label></li>
     </ul>
   </section>
 
   <footer>
-    Documento vivo — atualize conforme o projeto avançar. Plano de arquitetura, não implementação final.
+    Documento vivo, atualizado em 30/10/2026. Código e instruções em github.com/LucasBenevidev/locutor-camisa-treze.
   </footer>
 
 </div>
 
 <script>
 (function(){
-  var KEY = "locutor-camisa-treze-checklist";
+  var KEY = "locutor-camisa-treze-checklist-v2";
   var state = {};
   try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { state = {}; }
   var items = document.querySelectorAll("#checklist li");
   items.forEach(function(li){
     var id = li.getAttribute("data-id");
     var cb = li.querySelector("input");
-    if (state[id]) { cb.checked = true; li.classList.add("done"); }
+    if (id in state) { cb.checked = state[id]; }
+    li.classList.toggle("done", cb.checked);
     cb.addEventListener("change", function(){
       li.classList.toggle("done", cb.checked);
       state[id] = cb.checked;
